@@ -1,8 +1,0 @@
-azure
-azure-core
-yfinance
-numpy
-azure-keyvault-secrets
-azure.identity
-azure-eventhub-checkpointstoreblob-aio
-azure-eventhub
