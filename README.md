@@ -1,4 +1,4 @@
-# Eventhubs Producer with Python 
+# Eventhubs Producer with Python and Key Vault
 
 This project demonstrate how to create an Azure EventHubs producer with Python and key vault.
 
