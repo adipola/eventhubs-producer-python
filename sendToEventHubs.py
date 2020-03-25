@@ -48,17 +48,3 @@ loop = asyncio.get_event_loop()
 loop.run_until_complete(run(["MSFT"]))
 loop.close()
 
-
-
-# sched = BackgroundScheduler()
-# # seconds can be replaced with minutes, hours, or days
-# sched.add_job(run, 'interval', seconds=10)
-# print("going to start scheduled task")
-# sched.start()
-
-# toShutDown = os.getenv("SHUT_DOWN_PRODUCER")
-
-# if toShutDown == 'true':
-#     sched.shutdown()
-
-# run(["msft"])
