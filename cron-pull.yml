@@ -1,0 +1,26 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: data-ingest-pull-events-hub
+  replicas: 1
+  selector:
+    matchLabels:
+      app: data-ingest-pull-events-hub
+  template:
+    metadata:
+      labels:
+        app: data-ingest-pull-events-hub
+    spec:
+      schedule: "*/5 * * * *"
+      nodeSelector:
+        beta.kubernetes.io/os: linux
+        kubernetes.io/role: agent
+        type: linux
+      containers:
+        - name: eventhub-sender-app
+          image: acrendtoend.azurecr.io/end-to-end/eventhub-sender-app
+          ports:
+            - containerPort: 80
+      imagePullSecrets:
+        - name: acr-auth-docker
+
