@@ -1,0 +1,50 @@
+on: [push]
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@master
+    
+    - uses: azure/docker-login@v1
+      with:
+        login-server: acrendtoend.azurecr.io
+        username: ${{ secrets.acr_acrendtoend_username }}
+        password: ${{ secrets.acr_acrendtoend_password }}
+    
+    - name: Build and push image to ACR
+      id: build-image
+      run: |
+        docker build "$GITHUB_WORKSPACE/" -f  "Dockerfile" -t acrendtoend.azurecr.io/e2escenariosk8s:${{ github.sha }}
+        docker push acrendtoend.azurecr.io/e2escenariosk8s:${{ github.sha }}
+    
+    - uses: azure/k8s-set-context@v1
+      with:
+         kubeconfig: ${{ secrets.aks_e2escenariosk8s_kubeConfig }}
+      id: login
+    
+    - name: Create namespace
+      run: |
+        namespacePresent=`kubectl get namespace | grep e2escenariosk8s1b05 | wc -l`
+        if [ $namespacePresent -eq 0 ]
+        then
+            echo `kubectl create namespace e2escenariosk8s1b05`
+        fi
+
+    - uses: azure/k8s-create-secret@v1
+      with:
+        namespace: e2escenariosk8s1b05
+        container-registry-url: acrendtoend.azurecr.io
+        container-registry-username: ${{ secrets.acr_acrendtoend_username }}
+        container-registry-password: ${{ secrets.acr_acrendtoend_password }}
+        secret-name: e2escenariosdockerauth
+       
+    - uses: azure/k8s-deploy@v1
+      with:
+        namespace: e2escenariosk8s1b05
+        manifests: |
+          manifests/deployment.yml
+          manifests/service.yml
+        images: |
+          acrendtoend.azurecr.io/e2escenariosk8s:${{ github.sha }}
+        imagepullsecrets: |
+          e2escenariosdockerauth

@@ -1,0 +1,16 @@
+apiVersion : apps/v1beta1
+kind: Deployment
+metadata:
+  name: "e2escenariosk8s"
+spec:
+  replicas: 2
+  template:
+    metadata:
+      labels:
+        app: "e2escenariosk8s"
+    spec:
+      containers:
+        - name: "e2escenariosk8s"
+          image: "acrendtoend.azurecr.io/e2escenariosk8s"
+          ports:
+          - containerPort: 80
