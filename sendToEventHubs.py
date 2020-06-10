@@ -14,8 +14,8 @@ async def run(stocksCodesList):
     # Get connection string from vault
 
     credential = DefaultAzureCredential()
-    keyVaultName = "eventhub-connection-str"
-    secretName = "sendToEventHubTopic"
+    keyVaultName = {key_vault_name}
+    secretName = {secret_name}
     KVUri = "https://" + keyVaultName + ".vault.azure.net"
 
     client = SecretClient(vault_url=KVUri, credential=credential)
